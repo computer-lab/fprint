@@ -23,7 +23,7 @@ cdef extern from "libfprint/fprint.h":
 
     cpdef enum fp_finger:
         LEFT_THUMB = 1
-        LEFT_INDEX 
+        LEFT_INDEX
         LEFT_MIDDLE
         LEFT_RING
         LEFT_LITTLE
@@ -108,7 +108,11 @@ cdef extern from "libfprint/fprint.h":
 
     # Image handling
     struct fp_minutia:
-        pass
+        int    x
+        int    y
+        int    ex
+        int    ey
+        int    direction
 
     int fp_img_get_height(fp_img *img)
     int fp_img_get_width(fp_img *img)
@@ -117,13 +121,14 @@ cdef extern from "libfprint/fprint.h":
     void fp_img_standardize(fp_img *img)
     fp_img *fp_img_binarize(fp_img *img)
     fp_minutia **fp_img_get_minutiae(fp_img *img, int *nr_minutiae)
-    int fp_minutia_get_coords(fp_minutia *minutia, int *x, int *y)
+    int fp_minutia_get_coords(fp_minutia *minutia, int *x, int *y, int *ex, int *ey, int *coord_direction, double *reliability, int *type, int *appearing, int *feature_id)
     void fp_img_free(fp_img *img)
 
     # Polling and timing
     struct fp_pollfd:
         int fd
         short events
+
 
     int fp_handle_events_timeout(timeval *timeout)
     int fp_handle_events()

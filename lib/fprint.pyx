@@ -1,10 +1,11 @@
 import logging
 from fprint cimport *
 from cpython cimport PyBytes_FromStringAndSize
+from cython.operator cimport dereference
 from posix.types cimport suseconds_t, time_t
 from posix.time cimport timeval
 from libc.stdlib cimport malloc, free
-
+from libc.stdint cimport uintptr_t
 
 log = logging.Logger(__name__)
 
@@ -97,6 +98,7 @@ cdef class PrintData:
             return fp_print_data_delete(d.ptr, finger)
 
 
+
 cdef class Minutia:
     cdef fp_minutia *ptr
 
@@ -113,11 +115,18 @@ cdef class Minutia:
     def coords(self):
         cdef int x
         cdef int y
+        cdef int ex
+        cdef int ey
+        cdef int coord_direction
+        cdef double reliability
+        cdef int type
+        cdef int appearing
+        cdef int feature_id
         if self.ptr != NULL:
-            result = fp_minutia_get_coords(self.ptr, &x, &y)
+            result = fp_minutia_get_coords(self.ptr, &x, &y, &ex, &ey, &coord_direction, &reliability, &type, &appearing, &feature_id)
             if result == 0:
-                return (x, y)
-        return (None, None)
+                return (x, y, ex, ey, coord_direction, reliability, type, appearing, feature_id)
+            return (None, None, None, None, None, None, None, None, None)
 
 
 cdef class Image:

@@ -7,7 +7,7 @@ setup(
     package_dir={'fprint': 'lib'},
     packages=['fprint'],
     ext_modules=cythonize([
-        Extension("fprint", 
+        Extension("fprint",
             sources=["lib/fprint.pyx"],
             libraries=["fprint"]),
         ]
